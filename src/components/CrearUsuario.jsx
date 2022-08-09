@@ -1,6 +1,8 @@
 import React from "react";
 import { useState } from "react";
 import axios from 'axios'
+import { useParams } from "react-router-dom";
+import { useEffect } from "react";
 
 const CrearUsuario = () => {
 
@@ -13,6 +15,9 @@ const CrearUsuario = () => {
   }
 
   const [usuario, setUsuario] = useState(valorInicial)
+
+  let {id} = useParams();
+  const [subId, setSubId] = useState(id)
 
   const capturarDatos = (e) => {
     const {name, value} = e.target
@@ -36,6 +41,41 @@ const CrearUsuario = () => {
 
     setUsuario({...valorInicial})
   }
+
+  //funcion para actualizar el usuario
+
+  const actualizarUsuario = async (e) =>{
+    e.preventDefault();
+    const nuevoUsuario = {
+      nombre: usuario.nombre,
+      apellido: usuario.apellido,
+      edad: usuario.edad,
+      telefono: usuario.telefono,
+      correo: usuario.correo
+    }
+    await axios.put('http://localhost:4000/api/usuarios/' + subId, nuevoUsuario)
+    setUsuario({...valorInicial})
+    setSubId('')
+  }
+
+  //logica para realizar una peticios a la api
+
+  const obtenerUno = async(valorId)=>{
+    const res = await axios.get('http://localhost:4000/api/usuarios/' + valorId)
+    setUsuario({
+      nombre: res.data.nombre,
+      apellido: res.data.apellido,
+      telefono: res.data.telefono,
+      edad: res.data.edad,
+      correo: res.data.correo
+  })
+  }
+
+  useEffect(()=>{
+    if(subId !== ''){
+      obtenerUno(subId)
+    }
+  },[subId])
 
   return (
     <div className="col-md-6 offset-md-3">
@@ -113,6 +153,12 @@ const CrearUsuario = () => {
           </div>
 
           <button className="btn btn-primary form-control">Guardar Usuario</button>
+        </form>
+
+        <form onSubmit={actualizarUsuario}>
+          <button className="btn btn-danger from-control mt-2">
+          Actualizar Información 
+          </button>
         </form>
       </div>
     </div>

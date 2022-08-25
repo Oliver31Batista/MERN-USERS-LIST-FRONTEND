@@ -1,22 +1,22 @@
-import React from "react";
-import axios from "axios";
-import { useState } from "react";
-import { useEffect } from "react";
-import { Link } from "react-router-dom";
+import React from 'react';
+import axios from 'axios';
+import { useState } from 'react';
+import { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
 const ListaUsuario = () => {
   const [lista, setLista] = useState([]);
 
   useEffect(() => {
     const getUsuarios = async () => {
-      const res = await axios.get("http://localhost:4000/api/usuarios");
+      const res = await axios.get('http://localhost:4000/api/usuarios/');
       setLista(res.data);
     };
     getUsuarios();
   }, [lista]);
 
   const eliminarUsuario = async (id) => {
-    await axios.delete("http://localhost:4000/api/usuarios/" + id);
+    await axios.delete('http://localhost:4000/api/usuarios/' + id);
   };
 
   return (
@@ -42,7 +42,7 @@ const ListaUsuario = () => {
               </button>
               <Link
                 className="btn btn-primary m-1"
-                to={"/edit/" + listItem._id}
+                to={'/edit/' + listItem._id}
               >
                 Editar
               </Link>
